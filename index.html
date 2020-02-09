@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Создание лида</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div id="main">
+        <div id="leads">
+            <form id="newLead" action="" method="post">
+                <h1>Создание нового лида</h1>
+                <h4>Имя и телефон обязательны к заполнению.</h4>
+                <hr/>
+                <label>Имя:</label>
+                <input name="fields[NAME]" type="text" placeholder="ФИО">
+                <label>Телефон:</label>
+                <input name="fields[PHONE][0][VALUE]" type="text" placeholder="+7xxxxxxxxxx">
+                <label>E-mail:</label>
+                <input name="fields[EMAIL][0][VALUE]" type="text" placeholder="username@example.com">
+                <label>Комментарий:</label>
+                <textarea name="fields[COMMENTS]" placeholder="Оставьте свое сообщение..."></textarea>
+                <input type="hidden" name="fields[TITLE]" value="Создание лида из javascript через REST API">
+                <input type="submit" value="Отправить">
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var form = document.forms['newLead'];
+
+        form.onsubmit = async(event) => {
+            event.preventDefault();
+
+            if (form.elements['fields[NAME]'].value.trim() == '' || form.elements['fields[PHONE][0][VALUE]'].value.trim() == '') {
+                alert('Не все обязательные поля заполнены');
+                return;
+            }
+
+            const api = 'https://airenay.bitrix24.ru/rest/1/rn486lkx1r5skq7n/crm.lead.add'
+            const params = new URLSearchParams([...new FormData(event.target).entries()]);
+
+            const response = await fetch(api, {
+                method: "POST",
+                body: params
+            });
+
+            console.log(response);
+
+            if (response.ok) {
+                alert('Запрос успешно отправлен');
+            } else {
+                alert('Ошибка отправки запроса');
+            }
+        }
+    </script>
+</body>
+</html>
